@@ -5,7 +5,6 @@ from pprint import pprint
 
 from openai import OpenAI
 
-
 def heading(text: str) -> str:
     """Helper function for centering text."""
     return "\n" + f" {text} ".center(80, "=") + "\n"
@@ -27,7 +26,10 @@ thread = client.beta.threads.create(messages=[{"role": "user", "content": questi
 
 print(heading("Create a run and wait for completion"))
 run = client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant.id)
-assert run.status == "completed"
+
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 print("Run:")
 pprint(run.model_dump())
 

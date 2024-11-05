@@ -27,6 +27,10 @@ assistant = bee_client.beta.assistants.create(model="meta-llama/llama-3-1-70b-in
 question = "What is the opposite color of blue"
 thread = bee_client.beta.threads.create(messages=[{"role": "user", "content": question}])
 run = bee_client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant.id)
+
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 print("Run:")
 pprint(run.model_dump())
 

@@ -49,6 +49,10 @@ thread = client.beta.threads.create(
     messages=[{"role": "user", "content": "Who is the main character according to the files?"}]
 )
 run = client.beta.threads.runs.create_and_poll(assistant_id=assistant.id, thread_id=thread.id)
+
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 answer = client.beta.threads.messages.list(thread_id=thread.id).data[0].content[0].text.value
 print("Answer:", answer)
 
@@ -80,6 +84,10 @@ client.beta.threads.messages.create(
     # attachments=[{"file_id": file_2.id, "tools": [{"type": "file_search"}]}],
 )
 run = client.beta.threads.runs.create_and_poll(assistant_id=assistant.id, thread_id=thread.id)
+
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 answer = client.beta.threads.messages.list(thread_id=thread.id).data[0].content[0].text.value
 print("Answer:", answer)
 

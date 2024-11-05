@@ -86,6 +86,9 @@ print(heading("Run model and get answer"))
 thread = client.beta.threads.create(messages=[{"role": "user", "content": "Who owns the IP 8.8.8.8?"}])
 run = client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant.id)
 
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 answer = client.beta.threads.messages.list(thread_id=thread.id).data[0].content[0].text.value
 print("Answer:", answer)
 

@@ -31,6 +31,10 @@ thread = client.beta.threads.create(
     ]
 )
 run = client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant.id)
+
+if run.status != "completed":
+    raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
+
 messages = client.beta.threads.messages.list(thread_id=thread.id)
 answer = messages.data[0].content[0].text.value
 print("Answer:", answer)

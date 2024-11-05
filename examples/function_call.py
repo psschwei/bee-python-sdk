@@ -68,9 +68,9 @@ while run.status == "requires_action":
 
 if run.status != "completed":
     raise RuntimeError(f"Run is in an unexpected state: {run.status}\nError: {run.last_error}")
-else:
-    answer = client.beta.threads.messages.list(thread_id=thread.id).data[0].content[0].text.value
-    print("Answer:", answer)
+
+answer = client.beta.threads.messages.list(thread_id=thread.id).data[0].content[0].text.value
+print("Answer:", answer)
 
 # Cleanup
 client.beta.threads.delete(thread.id)
